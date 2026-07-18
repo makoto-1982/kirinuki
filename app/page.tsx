@@ -123,10 +123,9 @@ export default function Home() {
     url.search = "";
     url.hash = "";
     url.searchParams.set("clip", active.id);
-    const text = `「${active.clipTitle}」\n\nカラタチの最果てのセンセイ！\n切り抜きサンプラーで聴く👇`;
+    const text = `「${active.clipTitle}」\n\nカラタチの #最果てのセンセイ！\n切り抜きサンプラーで聴く☺️👉\n\n${url.toString()}`;
     const intent = new URL("https://twitter.com/intent/tweet");
     intent.searchParams.set("text", text);
-    intent.searchParams.set("url", url.toString());
     window.open(intent.toString(), "_blank", "noopener,noreferrer");
   };
 
