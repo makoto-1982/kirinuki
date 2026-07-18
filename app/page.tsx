@@ -18,6 +18,8 @@ const episodeTitle = (episode: number) => EPISODES[episode]?.title ?? `第${epis
 
 const ALL_CLIPS = clipData as Clip[];
 
+const RANKING_API_BASE = "https://kirinuki-ranking-api.goodtimes1982.workers.dev";
+
 const LINKS = {
   apple: "https://podcasts.apple.com/jp/podcast/%E3%82%AB%E3%83%A9%E3%82%BF%E3%81%AE%E6%9C%80%E6%9E%9C%E3%81%A6%E3%81%AE%E3%82%BB%E3%83%B3%E3%82%BB%E3%82%A4/id1680512344",
   spotify: "https://open.spotify.com/show/6REiZN6eLqyhikBNXX2b8N?si=d9d6ff0427544cbb",
@@ -57,7 +59,7 @@ export default function Home() {
   useEffect(() => {
     if (view !== "ranking") return;
     let cancelled = false;
-    fetch(`/api/rankings?period=${rankingPeriod}`)
+    fetch(`${RANKING_API_BASE}/api/rankings?period=${rankingPeriod}`)
       .then((response) => response.json())
       .then((data: { rankings?: { clipId: string; count: number }[] }) => {
         if (cancelled) return;
@@ -73,7 +75,7 @@ export default function Home() {
       localStorage.setItem("saihate-favorites", JSON.stringify(next));
       const liked = next.includes(id);
       if (deviceId) {
-        fetch("/api/favorites", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ clipId: id, deviceId, liked }) }).catch(() => {});
+        fetch(`${RANKING_API_BASE}/api/favorites`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ clipId: id, deviceId, liked }) }).catch(() => {});
       }
       return next;
     });
