@@ -120,10 +120,9 @@ export default function Home() {
 
   const shareClip = () => {
     // X_SHARE_FORMAT_V3: 本文とURLの間に必ず空行を入れる。
-    const url = new URL(window.location.href);
-    url.search = "";
-    url.hash = "";
-    url.searchParams.set("clip", active.id);
+    // Xのクローラーが切り抜き固有の画像を読める静的シェアページ。
+    // 人が開いた場合は /?clip=<id> へ自動で移動します。
+    const url = new URL(`share/${encodeURIComponent(active.id)}/`, window.location.href);
     const text = [
       `「${active.clipTitle}」`,
       "",
