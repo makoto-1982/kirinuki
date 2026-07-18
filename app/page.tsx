@@ -119,7 +119,7 @@ export default function Home() {
   };
 
   const shareClip = () => {
-    // X_SHARE_FORMAT_V2: 本文とURLの間に必ず空行を入れる。
+    // X_SHARE_FORMAT_V3: 本文とURLの間に必ず空行を入れる。
     const url = new URL(window.location.href);
     url.search = "";
     url.hash = "";
@@ -127,7 +127,7 @@ export default function Home() {
     const text = [
       `「${active.clipTitle}」`,
       "",
-      "カラタチの #最果てでのセンセイ！",
+      "カラタチの #最果てのセンセイ！",
       "切り抜きサンプラーで聴く☺️👉",
       "",
       url.toString(),
