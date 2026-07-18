@@ -32,6 +32,7 @@ export default function Home() {
   const [clips, setClips] = useState(() => ALL_CLIPS.slice(0, 8));
   const [active, setActive] = useState<Clip>(ALL_CLIPS[0]);
   const [playing, setPlaying] = useState(false);
+  const [shareFeedback, setShareFeedback] = useState("シェア");
   const audioRef = useRef<HTMLAudioElement>(null);
   const [favorites, setFavorites] = useState<string[]>(() => {
     if (typeof window === "undefined") return [];
@@ -51,9 +52,13 @@ export default function Home() {
   });
 
   useEffect(() => {
-    const initialClips = shuffle(ALL_CLIPS).slice(0, 8);
+    const sharedId = new URLSearchParams(window.location.search).get("clip");
+    const sharedClip = ALL_CLIPS.find((clip) => clip.id === sharedId);
+    const initialClips = sharedClip
+      ? [sharedClip, ...shuffle(ALL_CLIPS.filter((clip) => clip.id !== sharedClip.id)).slice(0, 7)]
+      : shuffle(ALL_CLIPS).slice(0, 8);
     setClips(initialClips);
-    setActive(initialClips[0]);
+    setActive(sharedClip ?? initialClips[0]);
   }, []);
 
   useEffect(() => {
@@ -112,6 +117,94 @@ export default function Home() {
       }
       audio.play().catch(() => setPlaying(false));
     }
+  };
+
+  const createShareCard = async (clip: Clip): Promise<File | null> => {
+    try {
+      await document.fonts.ready;
+      const canvas = document.createElement("canvas");
+      canvas.width = 1200;
+      canvas.height = 630;
+      const context = canvas.getContext("2d");
+      if (!context) return null;
+
+      context.fillStyle = "#07163d";
+      context.fillRect(0, 0, 1200, 630);
+      context.fillStyle = "#315085";
+      for (let x = 28; x < 1200; x += 36) {
+        for (let y = 28; y < 630; y += 36) context.fillRect(x, y, 3, 3);
+      }
+
+      context.fillStyle = "#fff1ce";
+      context.beginPath();
+      context.roundRect(48, 42, 1104, 546, 42);
+      context.fill();
+
+      const logo = new window.Image();
+      logo.src = saihateLogo.src;
+      await new Promise<void>((resolve, reject) => {
+        logo.onload = () => resolve();
+        logo.onerror = () => reject(new Error("logo load failed"));
+      });
+      context.drawImage(logo, 82, 72, 420, 153);
+
+      context.fillStyle = "#ff6435";
+      context.fillRect(82, 264, 12, 210);
+      context.fillStyle = "#07163d";
+      context.font = '800 28px "M PLUS Rounded 1c", sans-serif';
+      context.fillText(`EP.${String(clip.episode).padStart(3, "0")}  切り抜き`, 122, 300);
+
+      const words = Array.from(clip.clipTitle);
+      const lines: string[] = [];
+      let line = "";
+      context.font = '800 54px "M PLUS Rounded 1c", sans-serif';
+      for (const word of words) {
+        const candidate = line + word;
+        if (context.measureText(candidate).width > 900 && line) {
+          lines.push(line);
+          line = word;
+        } else line = candidate;
+      }
+      if (line) lines.push(line);
+      lines.slice(0, 3).forEach((text, index) => context.fillText(text, 122, 374 + index * 70));
+
+      context.fillStyle = "#536180";
+      context.font = '700 23px "M PLUS Rounded 1c", sans-serif';
+      context.fillText("saihate-sensei.com/kirinuki/", 760, 548);
+
+      const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"));
+      return blob ? new File([blob], `${clip.id}.png`, { type: "image/png" }) : null;
+    } catch {
+      return null;
+    }
+  };
+
+  const shareClip = async () => {
+    const url = new URL(window.location.href);
+    url.search = "";
+    url.hash = "";
+    url.searchParams.set("clip", active.id);
+    const title = `「${active.clipTitle}」｜カラタチの最果てのセンセイ！`;
+    const text = `「${active.clipTitle}」\nカラタチの最果てのセンセイ！ 切り抜きサンプラー`;
+
+    try {
+      const card = await createShareCard(active);
+      const shareData: ShareData = { title, text, url: url.toString() };
+      if (card && navigator.canShare?.({ files: [card] })) shareData.files = [card];
+      if (navigator.share) {
+        await navigator.share(shareData);
+        setShareFeedback("シェア済み");
+      } else {
+        await navigator.clipboard.writeText(url.toString());
+        setShareFeedback("コピー済み");
+      }
+    } catch (error) {
+      if ((error as DOMException).name !== "AbortError") {
+        await navigator.clipboard.writeText(url.toString()).catch(() => {});
+        setShareFeedback("コピー済み");
+      }
+    }
+    window.setTimeout(() => setShareFeedback("シェア"), 1800);
   };
 
   return (
@@ -173,6 +266,7 @@ export default function Home() {
             <div className="source-episode"><span>EP.{String(active.episode).padStart(3, "0")}</span><strong>{episodeTitle(active.episode)}</strong></div>
             <div className="now-actions">
               <button className={`heart ${favorites.includes(active.id) ? "liked" : ""}`} onClick={() => toggleFavorite(active.id)}><span>♥</span>{favorites.includes(active.id) ? "保存済み" : "お気に入り"}</button>
+              <button className="share" onClick={shareClip}><span>↗</span>{shareFeedback}</button>
               <a href={EPISODES[active.episode]?.appleUrl ?? LINKS.apple} target="_blank" rel="noreferrer">本編を聴く <b>→</b></a>
             </div>
           </aside>
