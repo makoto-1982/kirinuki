@@ -1,6 +1,7 @@
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800;900&display=swap");
 @import "tailwindcss";
 
-:root { --navy:#07163d; --cream:#fff1ce; --orange:#ff6435; --lime:#c7ef36; --sky:#4bc7ed; }
+:root { --font-rounded:"M PLUS Rounded 1c"; --navy:#07163d; --cream:#fff1ce; --orange:#ff6435; --lime:#c7ef36; --sky:#4bc7ed; }
 * { box-sizing:border-box; }
 html { background:var(--navy); }
 body { margin:0; color:var(--navy); font-family:var(--font-rounded),"Hiragino Maru Gothic ProN",sans-serif; font-weight:500; }

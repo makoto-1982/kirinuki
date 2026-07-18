@@ -1,12 +1,5 @@
 import type { Metadata } from "next";
-import { M_PLUS_Rounded_1c } from "next/font/google";
 import "./globals.css";
-
-const rounded = M_PLUS_Rounded_1c({
-  variable: "--font-rounded",
-  weight: ["500", "700", "800", "900"],
-  preload: false,
-});
 
 export const metadata: Metadata = {
   title: "カラタチの最果てのセンセイ！ 切り抜きサンプラー",
@@ -27,9 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body className={`${rounded.variable} antialiased`}>
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
