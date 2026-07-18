@@ -192,7 +192,6 @@ export default function Home() {
             <div className="track-head">
               <button className={`mini-pad mini-play ${active.color} ${playing ? "is-playing" : ""}`} onClick={togglePlayback} aria-label={playing ? "一時停止" : "再生"}>
                 <span>{playing ? "Ⅱ" : "▶"}</span>
-                <small>{playing ? "一時停止" : "再生"}</small>
               </button>
               <div><h2>{active.clipTitle}</h2></div>
             </div>
