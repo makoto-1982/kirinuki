@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
+import saihateLogo from "../public/saihate-logo.png";
 import episodeData from "../data/episodes.json";
 import clipData from "../data/clips.json";
 
@@ -122,7 +123,7 @@ export default function Home() {
       />
       <header className="topbar">
         <button className="brand" onClick={() => setView("sampler")}>
-          <Image src="/saihate-logo.png" alt="カラタチの最果てのセンセイ！" width={2048} height={746} priority />
+          <Image src={saihateLogo} alt="カラタチの最果てのセンセイ！" width={2048} height={746} priority />
         </button>
         <nav className="primary-nav" aria-label="メインメニュー">
           <button className={view === "favorites" ? "active" : ""} onClick={() => setView("favorites")}>♥ お気に入り</button>
