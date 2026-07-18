@@ -7,7 +7,7 @@ html { background:var(--navy); }
 body { margin:0; color:var(--navy); font-family:var(--font-rounded),"Hiragino Maru Gothic ProN",sans-serif; font-weight:500; }
 button,a { font:inherit; }
 button { color:inherit; }
-.site-shell { min-height:100vh; padding:28px clamp(18px,4vw,58px) 24px; background-color:var(--navy); background-image:radial-gradient(#315085 1px,transparent 1px),radial-gradient(circle at 8% 12%,#ff7a3d 0 3px,transparent 4px); background-size:28px 28px,100% 100%; }
+.site-shell { min-height:100vh; padding:28px clamp(18px,4vw,58px) 24px; background-color:var(--navy); background-image:radial-gradient(#315085 1px,transparent 1px); background-size:28px 28px; }
 .topbar { max-width:1400px; margin:0 auto 22px; display:grid; grid-template-columns:1.3fr auto auto; gap:26px; align-items:center; color:var(--cream); }
 .brand { width:min(430px,32vw); border:0; padding:0; background:none; cursor:pointer; }
 .brand img { display:block; width:100%; height:auto; }
