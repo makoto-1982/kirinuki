@@ -119,11 +119,19 @@ export default function Home() {
   };
 
   const shareClip = () => {
+    // X_SHARE_FORMAT_V2: 本文とURLの間に必ず空行を入れる。
     const url = new URL(window.location.href);
     url.search = "";
     url.hash = "";
     url.searchParams.set("clip", active.id);
-    const text = `「${active.clipTitle}」\n\nカラタチの #最果てのセンセイ！\n切り抜きサンプラーで聴く☺️👉\n\n${url.toString()}`;
+    const text = [
+      `「${active.clipTitle}」`,
+      "",
+      "カラタチの #最果てでのセンセイ！",
+      "切り抜きサンプラーで聴く☺️👉",
+      "",
+      url.toString(),
+    ].join("\n");
     const intent = new URL("https://twitter.com/intent/tweet");
     intent.searchParams.set("text", text);
     window.open(intent.toString(), "_blank", "noopener,noreferrer");
