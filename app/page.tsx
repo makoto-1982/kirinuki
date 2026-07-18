@@ -189,10 +189,16 @@ export default function Home() {
 
           <aside className="now-playing">
             <div className="now-label">{playing ? "再生中" : "スタンバイ"}</div>
-            <div className="track-head"><span className={`mini-pad ${active.color}`}>♪</span><div><h2>{active.clipTitle}</h2></div></div>
-            <button className="wave" onClick={togglePlayback} aria-label={playing ? "一時停止" : "再生"}>
-              <span>{playing ? "Ⅱ" : "▶"}</span><i className={playing ? "moving" : ""}>▂▅▃▇▆▂▅▇▃▆▂▃▇▅▂▆▃▇▂▅▆▃▂▇</i>
-            </button>
+            <div className="track-head">
+              <button className={`mini-pad mini-play ${active.color} ${playing ? "is-playing" : ""}`} onClick={togglePlayback} aria-label={playing ? "一時停止" : "再生"}>
+                <span>{playing ? "Ⅱ" : "▶"}</span>
+                <small>{playing ? "一時停止" : "再生"}</small>
+              </button>
+              <div><h2>{active.clipTitle}</h2></div>
+            </div>
+            <div className="wave" aria-hidden="true">
+              <i className={playing ? "moving" : ""}>▂▅▃▇▆▂▅▇▃▆▂▃▇▅▂▆▃▇▂▅▆▃▂▇</i>
+            </div>
             <div className="source-episode"><span>EP.{String(active.episode).padStart(3, "0")}</span><strong>{episodeTitle(active.episode)}</strong></div>
             <div className="now-actions">
               <button className={`heart ${favorites.includes(active.id) ? "liked" : ""}`} onClick={() => toggleFavorite(active.id)}><span>♥</span>{favorites.includes(active.id) ? "保存済み" : "お気に入り"}</button>
